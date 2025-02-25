@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 
-extern std::fstream token_file;
+extern std::ofstream token_file;
 
 class table_driven_dfsa {
     private:
@@ -13,6 +13,7 @@ class table_driven_dfsa {
     public:
         table_driven_dfsa();
         table_driven_dfsa(int tab_data[]);
+        int char_convert(char current_char);
         void tokenizer(std::string code_line);
 };
 

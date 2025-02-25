@@ -1,16 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "scanner.cpp"
+#include "scanner.h"
 
 int main() {
     std::string user_input;
-
-    std::ofstream token_list("token_list.txt");
-
     table_driven_dfsa FSA1;
 
     while (std::getline(std::cin, user_input)) {
+        std::cout << "Recieved input: " << user_input << std::endl;
         FSA1.tokenizer(user_input);        
     }
 

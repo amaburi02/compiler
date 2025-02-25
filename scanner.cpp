@@ -1,13 +1,16 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "scanner.h"
+
+std::ofstream token_file("token_list.txt");
 
 table_driven_dfsa::table_driven_dfsa() {
     state_table[0][0] = 0; state_table[0][1] = 2; state_table[0][2] = 4; state_table[0][3] = 6; state_table[0][4] = 7; state_table[0][5] = 8; state_table[0][6] = 9; state_table[0][7] = 10; state_table[0][8] = 13; state_table[0][9] = 16; state_table[0][10] = 19; state_table[0][11] = 20; state_table[0][12] = 21; state_table[0][13] = 22; state_table[0][14] = 1;
     state_table[1][0] = 1; state_table[1][1] = 1; state_table[1][2] = 1; state_table[1][3] = 1; state_table[1][4] = 1; state_table[1][5] = 1; state_table[1][6] = 1; state_table[1][7] = 1; state_table[1][8] = 1; state_table[1][9] = 1; state_table[1][10] = 1; state_table[1][11] = 1; state_table[1][12] = 1; state_table[1][13] = 1; state_table[1][14] = 1;
     state_table[2][0] = 3; state_table[2][1] = 2; state_table[2][2] = 3; state_table[2][3] = 3; state_table[2][4] = 3; state_table[2][5] = 3; state_table[2][6] = 3; state_table[2][7] = 3; state_table[2][8] = 3; state_table[2][9] = 3; state_table[2][10] = 3; state_table[2][11] = 3; state_table[2][12] = 3; state_table[2][13] = 3; state_table[2][14] = 1;
     state_table[3][0] = 3; state_table[3][1] = 3; state_table[3][2] = 3; state_table[3][3] = 3; state_table[3][4] = 3; state_table[3][5] = 3; state_table[3][6] = 3; state_table[3][7] = 3; state_table[3][8] = 3; state_table[3][9] = 3; state_table[3][10] = 3; state_table[3][11] = 3; state_table[3][12] = 3; state_table[3][13] = 3; state_table[3][14] = 1;
-    state_table[4][0] = 5; state_table[4][1] = 4; state_table[4][2] = 4; state_table[4][3] = 5; state_table[4][4] = 1; state_table[4][5] = 5; state_table[4][6] = 5; state_table[4][7] = 5; state_table[4][8] = 5; state_table[4][9] = 5; state_table[4][10] = 5; state_table[4][11] = 5; state_table[4][12] = 5; state_table[4][13] = 5; state_table[4][14] = 1;
+    state_table[4][0] = 5; state_table[4][1] = 4; state_table[4][2] = 4; state_table[4][3] = 5; state_table[4][4] = 5; state_table[4][5] = 5; state_table[4][6] = 5; state_table[4][7] = 5; state_table[4][8] = 5; state_table[4][9] = 5; state_table[4][10] = 5; state_table[4][11] = 5; state_table[4][12] = 5; state_table[4][13] = 5; state_table[4][14] = 1;
     state_table[5][0] = 5; state_table[5][1] = 5; state_table[5][2] = 5; state_table[5][3] = 5; state_table[5][4] = 5; state_table[5][5] = 5; state_table[5][6] = 5; state_table[5][7] = 5; state_table[5][8] = 5; state_table[5][9] = 5; state_table[5][10] = 5; state_table[5][11] = 5; state_table[5][12] = 5; state_table[5][13] = 5; state_table[5][14] = 1;
     state_table[6][0] = 6; state_table[6][1] = 6; state_table[6][2] = 6; state_table[6][3] = 6; state_table[6][4] = 6; state_table[6][5] = 6; state_table[6][6] = 6; state_table[6][7] = 6; state_table[6][8] = 6; state_table[6][9] = 6; state_table[6][10] = 6; state_table[6][11] = 6; state_table[6][12] = 6; state_table[6][13] = 6; state_table[6][14] = 1;
     state_table[7][0] = 7; state_table[7][1] = 7; state_table[7][2] = 7; state_table[7][3] = 7; state_table[7][4] = 7; state_table[7][5] = 7; state_table[7][6] = 7; state_table[7][7] = 7; state_table[7][8] = 7; state_table[7][9] = 7; state_table[7][10] = 7; state_table[7][11] = 7; state_table[7][12] = 7; state_table[7][13] = 7; state_table[7][14] = 1;
@@ -46,11 +49,157 @@ table_driven_dfsa::table_driven_dfsa(int tab_data[]) {
     }
 }
 
+int table_driven_dfsa::char_convert(char current_char) {
+    if (current_char == ' ') {
+        return 0;
+    }
+    else if (current_char >= '0' && current_char <= '9') {
+        return 1;
+    }
+    else if ((current_char >= 'a' && current_char <= 'z') || (current_char >= 'A' && current_char <= 'Z')) {
+        return 2;
+    }
+    else if (current_char == '*') {
+        return 3;
+    }
+    else if (current_char == '/') {
+        return 4;
+    }
+    else if (current_char == '+') {
+        return 5;
+    }
+    else if (current_char == '-') {
+        return 6;
+    }
+    else if (current_char == '=') {
+        return 7;
+    }
+    else if (current_char == '>') {
+        return 8;
+    }
+    else if (current_char == '<') {
+        return 9;
+    }
+    else if (current_char == '{') {
+        return 10;
+    }
+    else if (current_char == '}') {
+        return 11;
+    }
+    else if (current_char == ';') {
+        return 12;
+    }
+    else if (current_char == ',') {
+        return 13;
+    }
+    else {
+        return 14;
+    }    
+}
+
 void table_driven_dfsa::tokenizer(std::string code_line) {
     int next_state = 0;
     std::string current_token;
 
-    for(int i = 0; i < code_line.length(); i++) {
-        char current_char = i;
-    }
+        for(int i = 0; i < code_line.length(); i++) {
+            char current_char = code_line[i];
+            current_token += current_char;
+    
+            switch (next_state) {
+                case 0: next_state = state_table[0][char_convert(current_char)];
+                    break;
+                case 1: std::cout << "Illegal token!" << std::endl;
+                    return;
+                case 2: next_state = state_table[2][char_convert(current_char)];
+                    break;
+                case 3: token_file << current_token << " Integer" << std::endl; //Integer
+                    current_token.clear();
+                    break;
+                case 4: next_state = state_table[4][char_convert(current_char)];
+                    break;
+                case 5: token_file << current_token << " Variable" << std::endl; //Variable
+                    current_token.clear();    
+                    break;
+                case 6: token_file << current_token << " <mop>" << std::endl; //*
+                    current_token.clear();
+                    break;
+                case 7: token_file << current_token << " <mop>" << std::endl; // /
+                    current_token.clear();
+                    break;
+                case 8: token_file << current_token << " <addop>" << std::endl; //+
+                    current_token.clear();
+                    break;
+                case 9: token_file << current_token << " <addop>" << std::endl; //-
+                    current_token.clear();
+                    break;
+                case 10: next_state = state_table[10][char_convert(current_char)];
+                    break;
+                case 11: token_file << current_token << " <assign>" << std::endl; //=
+                    current_token.clear();
+                    break;
+                case 12: token_file << current_token << " <relop>" << std::endl; //==
+                    current_token.clear();
+                    break;
+                case 13: next_state = state_table[13][char_convert(current_char)];
+                    break;
+                case 14: token_file << current_token << " <relop>" << std::endl; //>
+                    current_token.clear();
+                    break;
+                case 15: token_file << current_token << " <relop>" << std::endl; //>=
+                    current_token.clear();
+                    break;
+                case 16: next_state = state_table[16][char_convert(current_char)];
+                    break;
+                case 17: token_file << current_token << " <relop>" << std::endl; //<
+                    current_token.clear();
+                    break;
+                case 18: token_file << current_token << " <relop>" << std::endl; //<=
+                    current_token.clear();
+                    break;
+                case 19: token_file << current_token << " l_brack" << std::endl; //{
+                    current_token.clear();
+                    break;
+                case 20: token_file << current_token << " r_brack" << std::endl; //}
+                    current_token.clear();
+                    break;
+                case 21: token_file << current_token << " semi" << std::endl; //;
+                    current_token.clear();
+                    break;
+                case 22: token_file << current_token << " comma" << std::endl; //,
+                    current_token.clear();
+                    break;
+                case 23: token_file << current_token << " $if" << std::endl;
+                    current_token.clear();
+                    break;
+                case 24: token_file << current_token << " $then" << std::endl;
+                    current_token.clear();
+                    break;
+                case 25: token_file << current_token << " $const" << std::endl;
+                    current_token.clear();
+                    break;
+                case 26: token_file << current_token << " $class" << std::endl;
+                    current_token.clear();
+                    break;
+                case 27: token_file << current_token << " var_declare" << std::endl;
+                    current_token.clear();
+                    break;
+                case 28: token_file << current_token << " $procedure" << std::endl;
+                    current_token.clear();
+                    break;
+                case 29: token_file << current_token << " $while" << std::endl;
+                    current_token.clear();
+                    break;
+                case 30: token_file << current_token << " $call" << std::endl;
+                    current_token.clear();
+                    break;
+                case 31: token_file << current_token << " $do" << std::endl;
+                    current_token.clear();
+                    break;
+                case 32: token_file << current_token << " $odd" << std::endl;
+                    current_token.clear();
+                    break;
+                default: std::cout << "Illegal input!" << std::endl;
+                    return;
+            }
+        }
 }
