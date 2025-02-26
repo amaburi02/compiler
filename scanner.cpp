@@ -3,8 +3,6 @@
 #include <fstream>
 #include "scanner.h"
 
-std::ofstream token_file("token_list.txt");
-
 table_driven_dfsa::table_driven_dfsa() {
     state_table[0][0] = 0; state_table[0][1] = 2; state_table[0][2] = 4; state_table[0][3] = 6; state_table[0][4] = 7; state_table[0][5] = 8; state_table[0][6] = 9; state_table[0][7] = 10; state_table[0][8] = 13; state_table[0][9] = 16; state_table[0][10] = 19; state_table[0][11] = 20; state_table[0][12] = 21; state_table[0][13] = 22; state_table[0][14] = 1;
     state_table[1][0] = 1; state_table[1][1] = 1; state_table[1][2] = 1; state_table[1][3] = 1; state_table[1][4] = 1; state_table[1][5] = 1; state_table[1][6] = 1; state_table[1][7] = 1; state_table[1][8] = 1; state_table[1][9] = 1; state_table[1][10] = 1; state_table[1][11] = 1; state_table[1][12] = 1; state_table[1][13] = 1; state_table[1][14] = 1;
@@ -97,12 +95,12 @@ int table_driven_dfsa::char_convert(char current_char) {
     }    
 }
 
-void table_driven_dfsa::tokenizer(std::string code_line) {
+void table_driven_dfsa::tokenizer(std::string full_program, std::ofstream& token_file) {
     int next_state = 0;
     std::string current_token;
 
-        for(int i = 0; i < code_line.length(); i++) {
-            char current_char = code_line[i];
+        for(int i = 0; i < full_program.length(); i++) {
+            char current_char = full_program[i];
             current_token += current_char;
     
             switch (next_state) {
