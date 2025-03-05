@@ -12,6 +12,7 @@ class table_driven_dfsa {
         table_driven_dfsa();
         table_driven_dfsa(int tab_data[]);
         int char_convert(char current_char);
+        std::string clean_token(std::string current_token);
         void tokenizer(std::string code_line, std::ofstream& token_file);
 };
 

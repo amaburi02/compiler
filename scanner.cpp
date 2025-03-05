@@ -95,6 +95,21 @@ int table_driven_dfsa::char_convert(char current_char) {
     }    
 }
 
+std::string table_driven_dfsa::clean_token(std::string current_token) {
+    if (current_token[0] == ' ') {
+        current_token.erase(current_token.begin());
+    }
+    if (current_token.back() == ' ') {
+        current_token.pop_back();
+    }
+    if (current_token.size() > 1) {
+        if (current_token.back() == ';' || current_token.back() == ',') {
+            current_token.pop_back();
+        }
+    }
+    return current_token;
+}
+
 void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_file) {
     int next_state = 0;
     int line_index = 0;
@@ -107,7 +122,9 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
     
             switch (next_state) {
                 case 0:
-                    current_token += current_char;
+                    if (current_char != ' ') {
+                        current_token += current_char;
+                    }
                     next_state = state_table[0][char_convert(current_char)];
                     line_index++;
                     break;
@@ -121,12 +138,11 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 3:
                     line_index--;
-                    current_token.pop_back();
+                    current_token = current_token = clean_token(current_token);
                     token_file << current_token << " Integer" << std::endl; //Integer
                     std::cout << "Inputting token: " << current_token << "with type Integer" << std::endl;
                     current_token.clear();
                     next_state = 0;
-                    line_index++;
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 4:
@@ -136,16 +152,16 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 5:
                     line_index--;
-                    current_token.pop_back();
+                    current_token = clean_token(current_token);
                     token_file << current_token << " Variable" << std::endl; //Variable
                     std::cout << "Inputting token: " << current_token << "with type Variable" << std::endl;
                     current_token.clear();    
                     next_state = 0;
-                    line_index++;
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 6: 
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <mop>" << std::endl; //*
                     std::cout << "Inputting token: " << current_token << "with type <mop>" << std::endl;
                     current_token.clear();
@@ -155,6 +171,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 7:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <mop>" << std::endl; // /
                     std::cout << "Inputting token: " << current_token << "with type <mop>" << std::endl;
                     current_token.clear();
@@ -163,7 +180,8 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 8:
-                    line_index--;  
+                    line_index--;
+                    current_token = clean_token(current_token);  
                     token_file << current_token << " <addop>" << std::endl; //+
                     std::cout << "Inputting token: " << current_token << "with type <addop>" << std::endl;
                     current_token.clear();
@@ -173,6 +191,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 9:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <addop>" << std::endl; //-
                     std::cout << "Inputting token: " << current_token << "with type <addop>" << std::endl;
                     current_token.clear();
@@ -186,6 +205,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 11:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <assign>" << std::endl; //=
                     std::cout << "Inputting token: " << current_token << "with type <assign>" << std::endl;
                     current_token.clear();
@@ -195,6 +215,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 12:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <relop>" << std::endl; //==
                     std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
@@ -208,6 +229,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 14:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <relop>" << std::endl; //>
                     std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
@@ -217,6 +239,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 15:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <relop>" << std::endl; //>=
                     std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
@@ -230,6 +253,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 17:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <relop>" << std::endl; //<
                     std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
@@ -239,6 +263,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 18:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " <relop>" << std::endl; //<=
                     std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
@@ -248,6 +273,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 19:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " l_brack" << std::endl; //{
                     std::cout << "Inputting token: " << current_token << "with type l_brack" << std::endl;
                     current_token.clear();
@@ -257,6 +283,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     break;
                 case 20:
                     line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " r_brack" << std::endl; //}
                     std::cout << "Inputting token: " << current_token << "with type r_brack" << std::endl;
                     current_token.clear();
@@ -265,21 +292,19 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_fi
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 21:
-                    line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " semi" << std::endl; //;
                     std::cout << "Inputting token: " << current_token << "with type semi" << std::endl;
                     current_token.clear();
                     next_state = 0;
-                    line_index++;
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 22:
-                    line_index--;
+                    current_token = clean_token(current_token);
                     token_file << current_token << " comma" << std::endl; //,
                     std::cout << "Inputting token: " << current_token << "with type comma" << std::endl;
                     current_token.clear();
                     next_state = 0;
-                    line_index++;
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 23: token_file << current_token << " $if" << std::endl;
