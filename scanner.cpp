@@ -95,76 +95,192 @@ int table_driven_dfsa::char_convert(char current_char) {
     }    
 }
 
-void table_driven_dfsa::tokenizer(std::string full_program, std::ofstream& token_file) {
+void table_driven_dfsa::tokenizer(std::string code_line, std::ofstream& token_file) {
     int next_state = 0;
+    int line_index = 0;
     std::string current_token;
 
-        for(int i = 0; i < full_program.length(); i++) {
-            char current_char = full_program[i];
-            current_token += current_char;
+        while (line_index < code_line.length()) {
+            char current_char = code_line[line_index];
+
+            std::cout << "On character: " << current_char << ", collected token: " << current_token << ", next state: " << next_state << std::endl;
     
             switch (next_state) {
-                case 0: next_state = state_table[0][char_convert(current_char)];
+                case 0:
+                    current_token += current_char;
+                    next_state = state_table[0][char_convert(current_char)];
+                    line_index++;
                     break;
-                case 1: std::cout << "Illegal token!" << std::endl;
+                case 1:
+                    std::cout << "Illegal token!" << std::endl;
                     return;
-                case 2: next_state = state_table[2][char_convert(current_char)];
+                case 2:
+                    next_state = state_table[2][char_convert(current_char)];
+                    current_token += current_char;
+                    line_index++;
                     break;
-                case 3: token_file << current_token << " Integer" << std::endl; //Integer
+                case 3:
+                    line_index--;
+                    current_token.pop_back();
+                    token_file << current_token << " Integer" << std::endl; //Integer
+                    std::cout << "Inputting token: " << current_token << "with type Integer" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 4: next_state = state_table[4][char_convert(current_char)];
+                case 4:
+                    current_token += current_char;
+                    next_state = state_table[4][char_convert(current_char)];
+                    line_index++;
                     break;
-                case 5: token_file << current_token << " Variable" << std::endl; //Variable
+                case 5:
+                    line_index--;
+                    current_token.pop_back();
+                    token_file << current_token << " Variable" << std::endl; //Variable
+                    std::cout << "Inputting token: " << current_token << "with type Variable" << std::endl;
                     current_token.clear();    
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 6: token_file << current_token << " <mop>" << std::endl; //*
+                case 6: 
+                    line_index--;
+                    token_file << current_token << " <mop>" << std::endl; //*
+                    std::cout << "Inputting token: " << current_token << "with type <mop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 7: token_file << current_token << " <mop>" << std::endl; // /
+                case 7:
+                    line_index--;
+                    token_file << current_token << " <mop>" << std::endl; // /
+                    std::cout << "Inputting token: " << current_token << "with type <mop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 8: token_file << current_token << " <addop>" << std::endl; //+
+                case 8:
+                    line_index--;  
+                    token_file << current_token << " <addop>" << std::endl; //+
+                    std::cout << "Inputting token: " << current_token << "with type <addop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 9: token_file << current_token << " <addop>" << std::endl; //-
+                case 9:
+                    line_index--;
+                    token_file << current_token << " <addop>" << std::endl; //-
+                    std::cout << "Inputting token: " << current_token << "with type <addop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 10: next_state = state_table[10][char_convert(current_char)];
+                    current_token += current_char;
+                    line_index++;
                     break;
-                case 11: token_file << current_token << " <assign>" << std::endl; //=
+                case 11:
+                    line_index--;
+                    token_file << current_token << " <assign>" << std::endl; //=
+                    std::cout << "Inputting token: " << current_token << "with type <assign>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 12: token_file << current_token << " <relop>" << std::endl; //==
+                case 12:
+                    line_index--;
+                    token_file << current_token << " <relop>" << std::endl; //==
+                    std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 13: next_state = state_table[13][char_convert(current_char)];
+                    current_token += current_char;
+                    line_index++;
                     break;
-                case 14: token_file << current_token << " <relop>" << std::endl; //>
+                case 14:
+                    line_index--;
+                    token_file << current_token << " <relop>" << std::endl; //>
+                    std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 15: token_file << current_token << " <relop>" << std::endl; //>=
+                case 15:
+                    line_index--;
+                    token_file << current_token << " <relop>" << std::endl; //>=
+                    std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 16: next_state = state_table[16][char_convert(current_char)];
+                    current_token += current_char;
+                    line_index++;
                     break;
-                case 17: token_file << current_token << " <relop>" << std::endl; //<
+                case 17:
+                    line_index--;
+                    token_file << current_token << " <relop>" << std::endl; //<
+                    std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 18: token_file << current_token << " <relop>" << std::endl; //<=
+                case 18:
+                    line_index--;
+                    token_file << current_token << " <relop>" << std::endl; //<=
+                    std::cout << "Inputting token: " << current_token << "with type <relop>" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 19: token_file << current_token << " l_brack" << std::endl; //{
+                case 19:
+                    line_index--;
+                    token_file << current_token << " l_brack" << std::endl; //{
+                    std::cout << "Inputting token: " << current_token << "with type l_brack" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 20: token_file << current_token << " r_brack" << std::endl; //}
+                case 20:
+                    line_index--;
+                    token_file << current_token << " r_brack" << std::endl; //}
+                    std::cout << "Inputting token: " << current_token << "with type r_brack" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 21: token_file << current_token << " semi" << std::endl; //;
+                case 21:
+                    line_index--;
+                    token_file << current_token << " semi" << std::endl; //;
+                    std::cout << "Inputting token: " << current_token << "with type semi" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
-                case 22: token_file << current_token << " comma" << std::endl; //,
+                case 22:
+                    line_index--;
+                    token_file << current_token << " comma" << std::endl; //,
+                    std::cout << "Inputting token: " << current_token << "with type comma" << std::endl;
                     current_token.clear();
+                    next_state = 0;
+                    line_index++;
+                    std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 23: token_file << current_token << " $if" << std::endl;
                     current_token.clear();
