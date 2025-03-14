@@ -1,7 +1,7 @@
-CLASS $class
+CLASS $CLASS
 Pgm1 <var>
 { $l_brack
-CONST $const
+CONST $CONST
 M <var>
 = <assign>
 13 <integer>
