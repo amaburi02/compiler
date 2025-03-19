@@ -10,3 +10,12 @@ R <var> 12 DS
 0 <integer> 0 16 DS
 2 <integer> 2 18 DS
 2 <integer> 2 20 DS
+0 <integer> 0 22 DS
+2 <integer> 2 24 DS
+2 <integer> 2 26 DS
+2 <integer> 2 28 DS
+1 <integer> 1 30 DS
+25 <integer> 25 32 DS
+3 <integer> 3 34 DS
+84 <integer> 84 36 DS
+36 <integer> 36 38 DS

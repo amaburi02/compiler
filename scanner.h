@@ -7,7 +7,7 @@
 
 class table_driven_dfsa {
     private:
-        int state_table[36][17];
+        int state_table[41][18];
     public:
         table_driven_dfsa();
         void initialize_table_dfsa(std::ifstream& table_file);
@@ -20,7 +20,7 @@ class table_driven_dfsa {
 
 class symbol_table_dfsa {
     private:
-        int state_table2[14][23];
+        int state_table2[14][24];
     public:
         symbol_table_dfsa();
         void initialize_symbol_dfsa(std::ifstream& table_file2);
