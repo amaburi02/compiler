@@ -2,12 +2,15 @@
 #include <fstream>
 #include <string>
 #include "scanner.h"
+#include "syntax_analyzer.h"
 
 int main() {
     std::fstream token_file ("token_list.txt");
     std::ifstream table_file ("token_fsa.txt");
     std::fstream symbol_file ("symbol_table.txt");
     std::ifstream table_file2 ("symbol_fsa.txt");
+    std::ifstream syntax_table_file ("syntax_table.txt");
+    std::fstream parse_output_file ("parse_output.txt");
     
     table_driven_dfsa FSA1;
     std::string user_input;
@@ -30,6 +33,10 @@ int main() {
     FSA2.print_state_table();
 
     FSA2.create_sym_table(token_file, symbol_file);
+
+    syntax_dpda ParseDPDA;
+
+    ParseDPDA.initialize_syntax_dpda(syntax_table_file);
 
     return 0;
 }

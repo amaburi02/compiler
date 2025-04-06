@@ -47,6 +47,8 @@
         "set": "cpp",
         "xtree": "cpp",
         "algorithm": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "deque": "cpp",
+        "stack": "cpp"
     }
 }

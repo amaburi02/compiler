@@ -3,7 +3,6 @@
 #include <set>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 #include "scanner.h"
 
 std::set<std::string> reserved_words = {"IF", "THEN", "ELSE", "CONST", "CLASS", "VAR", "PROCEDURE", "WHILE", "CALL", "DO", "ODD"};
@@ -252,9 +251,16 @@ int symbol_table_dfsa::token_convert(std::string s_token) {
 }
 
 std::string table_driven_dfsa::clean_token(std::string current_token) {
-    current_token.erase(remove(current_token.begin(), current_token.end(), ' '), current_token.end());
+    for (int i = 0; i < current_token.length(); i++) {
+        if (current_token[i] == ' ') {
+            current_token.erase(i, 1);
+            i--;
+        }
+    }
     
-    if (current_token.size() > 1) {
+    //current_token.erase(remove(current_token.begin(), current_token.end(), ' '), current_token.end());
+    
+    if (current_token.size() > 1) { //To remove trailing delimiters without affecting standalone delimiter tokens
         if (current_token.back() == ';' || current_token.back() == ',' || current_token.back() == '(') {
             current_token.pop_back();
         }
