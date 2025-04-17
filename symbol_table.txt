@@ -1,21 +1,8 @@
-LargestCommonDenominator <Program Name> 0 CS
-M $CONST 7 0 DS
-N $CONST 85 2 DS
+Pgm1 <Program Name> 0 CS
+M $CONST 13 0 DS
+N $CONST 56 2 DS
 X <var> 4 DS
 Y <var> 6 DS
 Z <var> 8 DS
-Q <var> 10 DS
-R <var> 12 DS
-0 <integer> 0 14 DS
-0 <integer> 0 16 DS
-2 <integer> 2 18 DS
-2 <integer> 2 20 DS
-0 <integer> 0 22 DS
-2 <integer> 2 24 DS
-2 <integer> 2 26 DS
-2 <integer> 2 28 DS
-1 <integer> 1 30 DS
-25 <integer> 25 32 DS
-3 <integer> 3 34 DS
-84 <integer> 84 36 DS
-36 <integer> 36 38 DS
+97 <integer> 97 10 DS
+18 <integer> 18 12 DS

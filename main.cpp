@@ -37,6 +37,14 @@ int main() {
     syntax_dpda ParseDPDA;
 
     ParseDPDA.initialize_syntax_dpda(syntax_table_file);
+    ParseDPDA.print_syntax_dpda();
+    
+    token_file.clear();
+    token_file.seekg(0, std::ios::beg);
+    
+    std::cout << "parsing.." << std::endl;
+    ParseDPDA.parse_precedence(token_file, symbol_file, parse_output_file);
+    std::cout << "success" << std::endl;
 
     return 0;
 }
