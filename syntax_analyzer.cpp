@@ -111,11 +111,14 @@ int syntax_dpda::operator_convert(std::string token_name, std::string token_clas
         return 22;
     }
 }
-
+//TODO gets stuck on ;
 void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbol_file, std::fstream& parse_output_file) {
     std::string line;
     std::stack<stack_elements> parsing_stack;
     int next_state = 0;
+    bool finished = false;
+    bool reprocess_line = false;
+    std::string saved_line;
     std::string token_name;
     std::string token_class;
     std::string last_op_name = "⊥";
@@ -129,7 +132,14 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
 
     bool skip_declarations = false;
 
-    while (std::getline(token_file, line)) {
+    while (!finished) {
+        if (reprocess_line) {
+            line = saved_line;
+            reprocess_line = false;
+        }
+        else {
+            std::getline(token_file, line);
+        }
         std::istringstream line_input(line);
         line_input >> token_name >> token_class;
 
@@ -152,6 +162,7 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
         switch(next_state) {
             case 0:
                 std::cout << "Invalid syntax!" << std::endl;
+                finished = true;
                 break;
             case 1:
                 std::cout << "In state 1, pushing " << token_name << " to the stack" << std::endl;
@@ -168,20 +179,25 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 left = parsing_stack.top().token;
                 parsing_stack.pop();
 
+                last_op_name = parsing_stack.top().token;
+                last_op_class = parsing_stack.top().token_class;
+
                 if (op == "+" || op == "-" || op == "*" || op == "/" ) {
                     parse_output_file << op << ", " << left << ", " << right << ", T" << std::to_string(temp_counter) << std::endl;
-                    temp_counter += 1;
                     parsing_stack.push(stack_elements{"T" + std::to_string(temp_counter), "<var>", 4});
+                    temp_counter += 1;
                 }
                 else if (op == "=") {
                     parse_output_file << op << ", " << right << ", , " << left << std::endl;
                 }
 
-                last_op_name = parsing_stack.top().token;
-                last_op_class = parsing_stack.top().token_class;
-
                 std::cout << "Reprocessing token: " << token_name << " " << token_class << std::endl;
-                continue;
+                if (parsing_stack.top().token_class != "$bottom") {
+                    reprocess_line = true; //to avoid skipping over operators that trigger a reduction
+                    saved_line = token_name + " " + token_class;
+                    std::cout << "top operator is: " << last_op_name << std::endl;
+                }
+                break;
             case 3:
                 std::cout << "In state 3, pushing " << token_name << " to the stack" << std::endl;
                 parsing_stack.push(stack_elements{token_name, token_class, 3});
