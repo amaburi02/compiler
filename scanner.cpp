@@ -657,7 +657,7 @@ void symbol_table_dfsa::create_sym_table(std::fstream& token_file, std::fstream&
                 next_state = state_table2[10][token_convert(s_class)];
                 std::cout << "Reading token's class: " << s_class << ", Next state is: " << next_state << std::endl;
                 if (s_class == "<integer>") {
-                    symbol_file << s_token << " " << s_class << " " << s_token << " " << current_address_value << " DS" << std::endl;
+                    symbol_file << "lit" << s_token << " " << s_class << " " << s_token << " " << current_address_value << " DS" << std::endl;
                 }
                 break;
             case 11:

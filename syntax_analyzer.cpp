@@ -229,7 +229,12 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 break;
             case 4:
                 std::cout << "In state 3, pushing nonterminal " << token_name << " to the stack" << std::endl;
-                parsing_stack.push(stack_elements{token_name, "<var>", 4});
+                if (token_class == "<integer>") {
+                    parsing_stack.push(stack_elements{"lit" + token_name, "<integer>", 4});
+                }
+                else {
+                    parsing_stack.push(stack_elements{token_name, "<var>", 4});
+                }
                 break;
             default:
                 std::cout << "Error!" << std::endl;

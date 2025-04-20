@@ -6,8 +6,9 @@
 std::string line;
 std::string token, type, value, address, segment;
 std::string op, left, right, target;
+std::string then, label;
 
-void code_generator::generate_asm_file(std::fstream& parse_output_file, std::fstream& symbol_file, std::fstream& assembly_file) {
+void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fstream& symbol_file, std::fstream& assembly_file) {
     assembly_file << "sys_exit equ 1\n"
                   << "sys_read equ 3\n"
                   << "sys_write equ 4\n"
@@ -79,6 +80,57 @@ void code_generator::generate_asm_file(std::fstream& parse_output_file, std::fst
         else if (op == "=") {
             assembly_file << "mov ax, [" << left << "]" << std::endl;
             assembly_file << "mov [" << target << "], ax" << std::endl;
+        }
+        else if (op == "==") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line); //for THEN
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JNE " << label << std::endl;
+        }
+        else if (op == "!=") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line);
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JE " << label << std::endl;
+        }
+        else if (op == ">") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line);
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JLE " << label << std::endl;
+        }
+        else if (op == "<") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line);
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JGE " << label << std::endl;
+        }
+        else if (op == ">=") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line);
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JL " << label << std::endl;
+        }
+        else if (op == "<=") {
+            assembly_file << "mov ax, [" << left << "]\n"
+                          << "cmp ax, [" << right << "]" << std::endl;
+            std::getline(parse_output_file, line);
+            std::istringstream then_quad(line);
+            line_input >> then >> label;
+            assembly_file << "JG " << label << std::endl;
+        }
+        else if (op[0] == 'L') {
+            assembly_file << op << ": nop" << std::endl;
         }
     }
     

@@ -3,6 +3,7 @@
 #include <string>
 #include "scanner.h"
 #include "syntax_analyzer.h"
+#include "code_gen.h"
 
 int main() {
     std::fstream token_file ("token_list.txt");
@@ -48,6 +49,14 @@ int main() {
     std::cout << "parsing.." << std::endl;
     ParseDPDA.parse_precedence(token_file, symbol_file, parse_output_file);
     std::cout << "success" << std::endl;
+
+    symbol_file.clear();
+    symbol_file.seekg(0, std::ios::beg);
+    parse_output_file.clear();
+    parse_output_file.seekg(0, std::ios::beg);
+
+    Code_Generator code_generator;
+    code_generator.generate_asm_file(parse_output_file, symbol_file, assembly_file);
 
     return 0;
 }

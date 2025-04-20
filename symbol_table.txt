@@ -1,15 +1,11 @@
-PGM1 <Program Name> 0 0 CS
-M $CONST 7 0 DS
-N $CONST 85 2 DS
+Pgm1 <Program Name> 0 0 CS
+M $CONST 13 0 DS
+N $CONST 56 2 DS
 X <var> ? 4 DS
 Y <var> ? 6 DS
 Z <var> ? 8 DS
-A <var> ? 10 DS
-12 <integer> 12 12 DS
-13 <integer> 13 14 DS
-T1 tempvar ? 16 DS
-T2 tempvar ? 18 DS
-T3 tempvar ? 20 DS
-T4 tempvar ? 22 DS
-T5 tempvar ? 24 DS
-T6 tempvar ? 26 DS
+lit97 <integer> 97 10 DS
+lit18 <integer> 18 12 DS
+T1 tempvar ? 14 DS
+T2 tempvar ? 16 DS
+T3 tempvar ? 18 DS
