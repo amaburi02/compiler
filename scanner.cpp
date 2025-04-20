@@ -523,7 +523,7 @@ void table_driven_dfsa::tokenizer(std::string code_line, std::fstream& token_fil
                     std::cout << "The next state is: " << next_state << std::endl;
                     break;
                 case 30:
-                    token_file << current_token << " IF" << std::endl;
+                    token_file << current_token << " $IF" << std::endl;
                     std::cout << "Inputting token: " << current_token << "with type IF" << std::endl;
                     current_token.clear();
                     next_state = 0;
@@ -611,7 +611,7 @@ void symbol_table_dfsa::create_sym_table(std::fstream& token_file, std::fstream&
                 std::cout << "Reading token's class: " << s_class << ", Next state is: " << next_state << std::endl;
                 break;
             case 1:
-                symbol_file << s_token << " <Program Name> " << current_address_value << " CS" << std::endl;
+                symbol_file << s_token << " <Program Name> 0 " << current_address_value << " CS" << std::endl;
                 next_state = state_table2[1][token_convert(s_class)];
                 std::cout << "Reading token's class: " << s_class << ", Next state is: " << next_state << std::endl;
                 break;
@@ -644,7 +644,7 @@ void symbol_table_dfsa::create_sym_table(std::fstream& token_file, std::fstream&
                 std::cout << "Reading token's class: " << s_class << ", Next state is: " << next_state << std::endl;
                 break;
             case 8:
-                symbol_file << s_token << " <var> " << current_address_value << " DS" << std::endl;
+                symbol_file << s_token << " <var> ? " << current_address_value << " DS" << std::endl;
                 next_state = state_table2[8][token_convert(s_class)];
                 std::cout << "Reading token's class: " << s_class << ", Next state is: " << next_state << std::endl;
                 break;

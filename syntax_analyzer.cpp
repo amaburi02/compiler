@@ -65,7 +65,7 @@ int syntax_dpda::operator_convert(std::string token_name, std::string token_clas
     else if (token_name == "/" && token_class == "<mop>") {
         return 7;
     }
-    else if (token_class == "IF") {
+    else if (token_class == "$IF") {
         return 8;
     }
     else if (token_class == "$THEN") {
@@ -111,20 +111,22 @@ int syntax_dpda::operator_convert(std::string token_name, std::string token_clas
         return 22;
     }
 }
-//TODO gets stuck on ;
+
 void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbol_file, std::fstream& parse_output_file) {
     std::string line;
     std::stack<stack_elements> parsing_stack;
     int next_state = 0;
     bool finished = false;
     bool reprocess_line = false;
+    bool if_statement = false;
     std::string saved_line;
     std::string token_name;
     std::string token_class;
-    std::string last_op_name = "⊥";
+    std::string last_op_name = "stack_bottom";
     std::string last_op_class = "$bottom";
     parsing_stack.push(stack_elements{last_op_name, last_op_class, 0});
     int temp_counter = 1;
+    int label_counter = 1;
    
     std::string left;
     std::string right;
@@ -158,7 +160,7 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
         }
 
         next_state = state_table[operator_convert(last_op_name, last_op_class)][operator_convert(token_name, token_class)];
-
+        std::cout << "using state_table[" << last_op_name << "][" << token_name << "], which is: " << next_state << std::endl;
         switch(next_state) {
             case 0:
                 std::cout << "Invalid syntax!" << std::endl;
@@ -169,9 +171,24 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 parsing_stack.push(stack_elements{token_name, token_class, 1});
                 last_op_name = token_name;
                 last_op_class = token_class;
+                if (token_class == "$IF") {
+                    if_statement = true;
+                }
                 break;
             case 2:
                 std::cout << "In state 2, popping from the stack" << std::endl;
+                if (token_class == "$r_brack" && if_statement == true) {
+                    if_statement = false;
+                    parse_output_file << "L" << std::to_string(label_counter) << ", , ," << std::endl;
+                    while (parsing_stack.top().token_class != "$IF") {
+                        parsing_stack.pop();
+                    }
+                    parsing_stack.pop();
+                    last_op_name = parsing_stack.top().token;
+                    last_op_class = parsing_stack.top().token_class;
+                    label_counter++;
+                    break;
+                }
                 right = parsing_stack.top().token;
                 parsing_stack.pop();
                 op = parsing_stack.top().token;
@@ -190,6 +207,9 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 else if (op == "=") {
                     parse_output_file << op << ", " << right << ", , " << left << std::endl;
                 }
+                else if (op == "==" || op == "!=" || op == ">" || op == "<" || op == ">=" || op == "<=") {
+                    parse_output_file << op << ", " << left << ", " << right << ", ?" << std::endl;
+                }
 
                 std::cout << "Reprocessing token: " << token_name << " " << token_class << std::endl;
                 if (parsing_stack.top().token_class != "$bottom") {
@@ -203,6 +223,9 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 parsing_stack.push(stack_elements{token_name, token_class, 3});
                 last_op_name = token_name;
                 last_op_class = token_class;
+                if (token_class == "$THEN") {
+                    parse_output_file << "THEN, L" << std::to_string(label_counter) << ", ," << std::endl;
+                }
                 break;
             case 4:
                 std::cout << "In state 3, pushing nonterminal " << token_name << " to the stack" << std::endl;
@@ -212,5 +235,19 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                 std::cout << "Error!" << std::endl;
                 break;
         }
+    }
+    
+    int address_count = 0;
+    std::getline(symbol_file, line); //skip over program name line
+    while (std::getline(symbol_file, line)) {
+        address_count += 2;
+    }
+
+    symbol_file.clear();
+    symbol_file.seekp(0, std::ios::end);
+
+    for (int i = 1; i < temp_counter; i++) {
+        symbol_file << "T" << i << " tempvar ? " << address_count << " DS" << std::endl;
+        address_count += 2;
     }
 }

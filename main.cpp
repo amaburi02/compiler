@@ -11,6 +11,7 @@ int main() {
     std::ifstream table_file2 ("symbol_fsa.txt");
     std::ifstream syntax_table_file ("syntax_table.txt");
     std::fstream parse_output_file ("parse_output.txt");
+    std::fstream assembly_file ("program.asm");
     
     table_driven_dfsa FSA1;
     std::string user_input;
@@ -38,9 +39,11 @@ int main() {
 
     ParseDPDA.initialize_syntax_dpda(syntax_table_file);
     ParseDPDA.print_syntax_dpda();
-    
+
     token_file.clear();
     token_file.seekg(0, std::ios::beg);
+    symbol_file.clear();
+    symbol_file.seekg(0, std::ios::beg);
     
     std::cout << "parsing.." << std::endl;
     ParseDPDA.parse_precedence(token_file, symbol_file, parse_output_file);

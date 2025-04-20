@@ -1,5 +1,10 @@
 CLASS PGM1 {
   CONST M = 7, N = 85;
-  VAR X, Y, Z;
+  VAR X, Y, Z, A;
   X = M + Y * Z + 12;
+  A = X * Z + 13;
+
+  IF A < X THEN {
+     X = X - 13;
+  }
 }
