@@ -104,7 +104,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line); //for THEN
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JNE " << label << std::endl;
         }
         else if (op == "!=") {
@@ -112,7 +113,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line);
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JE " << label << std::endl;
         }
         else if (op == ">") {
@@ -120,7 +122,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line);
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JLE " << label << std::endl;
         }
         else if (op == "<") {
@@ -128,7 +131,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line);
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JGE " << label << std::endl;
         }
         else if (op == ">=") {
@@ -136,7 +140,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line);
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JL " << label << std::endl;
         }
         else if (op == "<=") {
@@ -144,7 +149,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                           << "cmp ax, [" << right << "]" << std::endl;
             std::getline(parse_output_file, line);
             std::istringstream then_quad(line);
-            line_input >> then >> label;
+            then_quad >> then >> label;
+            label.pop_back();
             assembly_file << "JG " << label << std::endl;
         }
         else if (op[0] == 'L') {
