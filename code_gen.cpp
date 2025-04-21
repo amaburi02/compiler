@@ -17,6 +17,11 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
                   << "stderr equ 3\n" << std::endl;
 
     assembly_file << "section .data" << std::endl;
+    assembly_file << "newline db 0xA\n"
+                  << "Result db 'Ans = '\n"
+                  << "ResultValue db 'aaaaa'\n"
+                  << "db 0xA\n"
+                  << "ResultEnd equ $-Result" << std::endl;
     while (std::getline(symbol_file, line)) {
         std::istringstream line_input(line);
         line_input >> token >> type >> value >> address >> segment;
@@ -29,7 +34,8 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
         }
     }
 
-    assembly_file << "section .bss" << std::endl;
+    assembly_file << "section .bss\n"
+                  << "ReadInt RESW 1" << std::endl;
     symbol_file.clear();
     symbol_file.seekg(0, std::ios::beg);
     while (std::getline(symbol_file, line)) {
@@ -45,7 +51,19 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
     }
 
     assembly_file << "global _start\n" 
-                  << "section .text\n" << std::endl
+                  << "section .text\n"
+                  << "ConvertIntegerToString:\n"
+                  << "mov ebx, ResultValue + 4\n"
+                  << "ConvertLoop:\n"
+                  << "sub dx, dx\n"
+                  << "mov cx, 10\n"
+                  << "div cx\n"
+                  << "add dl, '0'\n"
+                  << "mov [ebx], dl\n"
+                  << "dec ebx\n"
+                  << "cmp ebx, ResultValue\n"
+                  << "jge ConvertLoop\n"
+                  << "ret" << std::endl
                   << "_start:\n";
     while (std::getline(parse_output_file, line)) {
         std::istringstream line_input(line);
@@ -67,7 +85,7 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
         }
         else if (op == "*") {
             assembly_file << "mov ax, [" << left << "]\n"
-                          << "mul [" << right << "]\n"
+                          << "mul word [" << right << "]\n"
                           << "mov [" << target << "], ax" << std::endl;
         }
         else if (op == "/") {
@@ -133,6 +151,14 @@ void Code_Generator::generate_asm_file(std::fstream& parse_output_file, std::fst
             assembly_file << op << ": nop" << std::endl;
         }
     }
+    
+    assembly_file << "mov ax, [" << target << "]\n"
+                  << "call ConvertIntegerToString\n"
+                  << "mov eax, 4\n"
+                  << "mov ebx, 1\n"
+                  << "mov ecx, Result\n"
+                  << "mov edx, ResultEnd\n"
+                  << "int 80h" << std::endl;
     
     assembly_file << "mov eax, sys_exit\n"
                   << "xor ebx, ebx\n"
