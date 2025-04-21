@@ -13,6 +13,8 @@ db 0xA
 ResultEnd equ $-Result
 M DW 7
 N DW 85
+lit6 DW 6
+lit34 DW 34
 lit12 DW 12
 lit13 DW 13
 section .bss
@@ -42,6 +44,10 @@ cmp ebx, ResultValue
 jge ConvertLoop
 ret
 _start:
+mov ax, [lit6]
+mov [Y], ax
+mov ax, [lit34]
+mov [Z], ax
 mov ax, [Y]
 mul word [Z]
 mov [T1], ax

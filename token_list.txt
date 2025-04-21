@@ -19,6 +19,14 @@ Z <var>
 , <comma>
 A <var>
 ; <semi>
+Y <var>
+= <assign>
+6 <integer>
+; <semi>
+Z <var>
+= <assign>
+34 <integer>
+; <semi>
 X <var>
 = <assign>
 M <var>

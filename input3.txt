@@ -1,6 +1,8 @@
 CLASS PGM1 {
   CONST M = 7, N = 85;
   VAR X, Y, Z, A;
+  Y = 6;
+  Z = 34;
   X = M + Y * Z + 12;
   A = X * Z + 13;
 
