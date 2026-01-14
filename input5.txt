@@ -1,0 +1,9 @@
+CLASS PgmC2 {
+  VAR X, Y, Answer;
+  IF X > Y THEN {
+    Answer = X;
+  }
+  IF X < Y THEN {
+    Answer = Y;
+  }
+}

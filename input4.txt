@@ -1,0 +1,5 @@
+CLASS PgmC1 {
+  CONST c = 3;
+  VAR a, b, ans, Bob, Jane;
+  ans = a * ((Bob + Jane - 10) / 2 * 4) / (b + c);
+}

@@ -37,7 +37,6 @@ int main() {
     FSA2.create_sym_table(token_file, symbol_file);
 
     syntax_dpda ParseDPDA;
-
     ParseDPDA.initialize_syntax_dpda(syntax_table_file);
     ParseDPDA.print_syntax_dpda();
 

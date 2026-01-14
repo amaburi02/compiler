@@ -211,6 +211,19 @@ void syntax_dpda::parse_precedence(std::fstream& token_file, std::fstream& symbo
                     parse_output_file << op << ", " << left << ", " << right << ", ?" << std::endl;
                 }
 
+                if (token_class == "$r_paren") {
+                    stack_elements saved_temp = parsing_stack.top();
+                    parsing_stack.pop();
+                    parsing_stack.pop(); //remove (
+                    std::cout << "popped (" << std::endl;
+                    if (parsing_stack.top().token == "+" || parsing_stack.top().token == "-" || parsing_stack.top().token == "*" || parsing_stack.top().token == "/") {
+                        last_op_name = parsing_stack.top().token;
+                        last_op_class = parsing_stack.top().token_class;
+                    }
+                    parsing_stack.push(saved_temp);                
+                    continue;
+                }
+
                 std::cout << "Reprocessing token: " << token_name << " " << token_class << std::endl;
                 if (parsing_stack.top().token_class != "$bottom") {
                     reprocess_line = true; //to avoid skipping over operators that trigger a reduction

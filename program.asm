@@ -6,11 +6,20 @@ stdout equ 1
 stderr equ 3
 
 section .data
+userMsg db 'Enter an integer(less than 32,765)'
+lenUserMsg equ $-userMsg
+displayMsg db 'You entered: '
+lenDisplayMsg equ $-displayMsg
 newline db 0xA
+Ten DW 10
+printTempchar db 'Tempchar=:'
+lenprintTempchar equ $-printTempchar
 Result db 'Ans = '
 ResultValue db 'aaaaa'
 db 0xA
 ResultEnd equ $-Result
+num times 6 db 'ABCDEF'
+numEnd equ $-num
 M DW 7
 N DW 85
 lit6 DW 6
@@ -18,7 +27,12 @@ lit34 DW 34
 lit12 DW 12
 lit13 DW 13
 section .bss
+TempChar RESB 1
+testchar RESB 1
 ReadInt RESW 1
+tempint RESW 1
+negflag RESB 1
+
 X RESW 1
 Y RESW 1
 Z RESW 1
@@ -31,6 +45,46 @@ T5 RESW 1
 T6 RESW 1
 global _start
 section .text
+PrintString:
+push ax
+push dx
+mov eax, 4
+mov ebx, 1
+mov ecx, userMsg
+mov edx, lenUserMsg
+int 80h
+pop dx
+pop ax
+ret
+GetAnInteger:
+mov eax, 3
+mov ebx, 2
+mov ecx, num
+mov edx, 6
+int 0x80
+mov edx, eax
+mov eax, 4
+mov ebx, 1
+mov ecx, num
+int 80h
+ConvertStringToInteger:
+mov ax, 0
+mov [ReadInt], ax
+mov ecx, num
+mov bx, 0
+mov bl, byte [ecx]
+Next: sub bl, '0'
+mov ax, [ReadInt]
+mov dx, 10
+mul dx
+add ax, bx
+mov [ReadInt], ax
+mov bx, 0
+add ecx, 1
+mov bl, byte[ecx]
+cmp bl,0xA
+jne Next
+ret
 ConvertIntegerToString:
 mov ebx, ResultValue + 4
 ConvertLoop:
@@ -44,6 +98,22 @@ cmp ebx, ResultValue
 jge ConvertLoop
 ret
 _start:
+call PrintString
+call GetAnInteger
+mov ax, [ReadInt]
+mov [X], ax
+call PrintString
+call GetAnInteger
+mov ax, [ReadInt]
+mov [Y], ax
+call PrintString
+call GetAnInteger
+mov ax, [ReadInt]
+mov [Z], ax
+call PrintString
+call GetAnInteger
+mov ax, [ReadInt]
+mov [A], ax
 mov ax, [lit6]
 mov [Y], ax
 mov ax, [lit34]

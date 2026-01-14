@@ -261,7 +261,7 @@ std::string table_driven_dfsa::clean_token(std::string current_token) {
     //current_token.erase(remove(current_token.begin(), current_token.end(), ' '), current_token.end());
     
     if (current_token.size() > 1) { //To remove trailing delimiters without affecting standalone delimiter tokens
-        if (current_token.back() == ';' || current_token.back() == ',' || current_token.back() == '(') {
+        if (current_token.back() == ';' || current_token.back() == ',' || current_token.back() == '(' || current_token.back() == ')') {
             current_token.pop_back();
         }
     }
